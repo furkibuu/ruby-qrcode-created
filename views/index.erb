@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Kod Oluşturucu</title>
+  <style>
+    :root {
+      --bg: #f2f2f2;
+      --text: #000;
+      --container-bg: white;
+      --btn-bg: #4CAF50;
+    }
+
+    body.dark {
+      --bg: #1e1e1e;
+      --text: #f1f1f1;
+      --container-bg: #2b2b2b;
+      --btn-bg: #66bb6a;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .container {
+      background: var(--container-bg);
+      padding: 40px;
+      border-radius: 10px;
+      width: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background: var(--btn-bg);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    img {
+      margin-top: 20px;
+    }
+
+    .history {
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .history img {
+      width: 100px;
+      height: 100px;
+      margin-right: 10px;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      background: var(--container-bg);
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    #theme-toggle {
+      margin-top: 10px;
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <% if user %>
+      <p>👋 Merhaba, <strong><%= user['name'] %></strong>!</p>
+      <img src="<%= user['image'] %>" width="50" style="border-radius:50%;">
+      <br>
+      <a href="/logout"><button>Çıkış Yap</button></a>
+    <% else %>
+      <p>👋 Hoş geldiniz!</p>
+    <% end %>
+
+    <h1>QR Kod Oluşturucu</h1>
+
+    <form action="/generate" method="post">
+      <input type="text" name="qr_text" placeholder="Bir şeyler yazın..." required>
+      <br>
+      <button type="submit">QR Kod Oluştur</button>
+    </form>
+
+    <button id="theme-toggle">🌙 Tema Değiştir</button>
+
+    <% if qr_code %>
+      <h2>"<%= text %>" için QR Kod:</h2>
+      <img id="current-qr" src="data:image/png;base64,<%= qr_code %>">
+      <br>
+      <a id="download-link" download="qr.png" href="data:image/png;base64,<%= qr_code %>">
+        <button>📥 QR Kod İndir</button>
+      </a>
+    <% end %>
+
+    <% if history.any? %>
+      <div class="history">
+        <h3>📜 QR Kod Geçmişi</h3>
+        <% history.reverse.each do |entry| %>
+          <div class="history-item">
+            <img src="data:image/png;base64,<%= entry[:image] %>">
+            <div style="margin-left: 10px;">
+              <strong><%= entry[:text] %></strong>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <script>
+    const body = document.body;
+    const themeBtn = document.getElementById("theme-toggle");
+    const currentTheme = localStorage.getItem("theme");
+
+    if (currentTheme === "dark") body.classList.add("dark");
+
+    themeBtn.addEventListener("click", () => {
+      body.classList.toggle("dark");
+      localStorage.setItem("theme", body.classList.contains("dark") ? "dark" : "light");
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Gemfile
+source 'https://rubygems.org'
+
+gem 'sinatra'
+gem 'rqrcode'
+gem 'chunky_png'
+gem 'dotenv'
+gem 'rack-session'
+gem 'sinatra-contrib'
