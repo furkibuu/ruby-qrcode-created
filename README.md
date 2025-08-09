@@ -39,7 +39,7 @@ Kullanıcılar metin girerek anında QR kod üretebilir, görüntüleyebilir, in
 
 2. **Depoyu klonlayın**
    ```bash
-   git clone https://github.com/kullanici/ruby-qrcode-created.git
+   git clone https://github.com/furkibuu/ruby-qrcode-created.git
    cd ruby-qrcode-created
    ```
 
